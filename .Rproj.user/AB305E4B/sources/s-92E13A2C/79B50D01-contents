@@ -65,7 +65,7 @@ postest_eval1 <- postest_eval1 %>%
 names(postest_eval1) <- c("nombre","sexo","fecha_nacimiento","grado","pregunta","respuesta","interpretacion")
 
 pretest_eval2 <- read_excel("../Datos/PRE_TEST_LENGUAJE FIGURADO EVALUACION 2_Vf.xlsx")
-pretest_eval2 <- postest_eval1 %>% 
+pretest_eval2 <- pretest_eval2 %>% 
   unite("Mandragora disfrutaba de una vida sin dolores de cabeza:","Mandragora disfrutaba de una vida sin dolores de cabeza:","INTERPRETACION", sep = "%", remove = TRUE) %>%
   unite("Mandragora ordeno su habitacion en un abrir y cerrar de ojos:","Mandragora ordeno su habitacion en un abrir y cerrar de ojos:","INTERPRETACION__1", sep = "%", remove = TRUE) %>%
   unite("Circe pierde la cabeza por un buen postre:","Circe pierde la cabeza por un buen postre:","INTERPRETACION__2", sep = "%", remove = TRUE) %>%
