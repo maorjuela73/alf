@@ -1,5 +1,6 @@
 library("tidyverse", lib.loc="~/R/win-library/3.4")
 library("readxl", lib.loc="~/R/win-library/3.4")
+library("lubridate", lib.loc="~/R/win-library/3.4")
 
 pretest_eval1 <- read_excel("../Datos/PRE_TEST_LENGUAJE FIGURADO_EVALUACION 1_Vf.xlsx")
 pretest_eval1 <- pretest_eval1 %>% 
@@ -31,5 +32,6 @@ pretest_eval1 <- pretest_eval1 %>%
                                                                "Y asi como por arte de magia:")) %>%
   separate(respuesta, c("respuesta","interpretacion"), sep = "%", remove = TRUE)
 names(pretest_eval1) <- c("nombre","sexo","fecha_nacimiento","grado","pregunta","respuesta","interpretacion")
+pretest_eval1["fecha_nacimiento"] <- parse_date_time(pretest_eval1["fecha_nacimiento"], "%y-%m-%d")
 ggplot(pretest_eval1,aes(x =pretest_eval1$fecha_nacimiento))+geom_bar()
 
