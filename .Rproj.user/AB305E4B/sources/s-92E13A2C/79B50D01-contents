@@ -66,34 +66,53 @@ names(postest_eval1) <- c("nombre","sexo","fecha_nacimiento","grado","pregunta",
 
 pretest_eval2 <- read_excel("../Datos/PRE_TEST_LENGUAJE FIGURADO EVALUACION 2_Vf.xlsx")
 pretest_eval2 <- pretest_eval2 %>% 
-  unite("Mandragora disfrutaba de una vida sin dolores de cabeza:","Mandragora disfrutaba de una vida sin dolores de cabeza:","INTERPRETACION", sep = "%", remove = TRUE) %>%
-  unite("Mandragora ordeno su habitacion en un abrir y cerrar de ojos:","Mandragora ordeno su habitacion en un abrir y cerrar de ojos:","INTERPRETACION__1", sep = "%", remove = TRUE) %>%
-  unite("Circe pierde la cabeza por un buen postre:","Circe pierde la cabeza por un buen postre:","INTERPRETACION__2", sep = "%", remove = TRUE) %>%
-  unite("Mandragora se quedo con la boca abierta:","Mandragora se quedo con la boca abierta:","INTERPRETACION__3", sep = "%", remove = TRUE) %>%
-  unite("Abriendo los ojos como platos:","Abriendo los ojos como platos:","INTERPRETACION__4", sep = "%", remove = TRUE) %>%
-  unite("Le habian tomado el pelo:","Le habian tomado el pelo:","INTERPRETACION__5", sep = "%", remove = TRUE) %>%
-  unite("Se habia dado con la puerta en las narices:","Se habia dado con la puerta en las narices:","INTERPRETACION__6", sep = "%", remove = TRUE) %>%
-  unite("Gritando a todo pulmon:","Gritando a todo pulmon:","INTERPRETACION__7", sep = "%", remove = TRUE) %>%
-  unite("Las aguas del rio rugian como leones:","Las aguas del rio rugian como leones:","INTERPRETACION__8", sep = "%", remove = TRUE) %>%
-  unite("La bruja con el corazon en la boca:","La bruja con el corazon en la boca:","INTERPRETACION__9", sep = "%", remove = TRUE) %>%
-  unite("Mandragora con los nervios a flor de piel:","Mandragora con los nervios a flor de piel:","INTERPRETACION__10", sep = "%", remove = TRUE) %>%
-  unite("Y asi como por arte de magia:","Y asi como por arte de magia:","INTERPRETACION__11", sep = "%", remove = TRUE) %>%
+  unite("Si yo le digo a un niño la expresion \"no seas payaso\" le estoy queriendo decir que:","Si yo le digo a un niño la expresion \"no seas payaso\" le estoy queriendo decir que:","INTERPRETACION", sep = "%", remove = TRUE) %>%
+  unite("Si yo le digo a un niño: \"pareces un loro\" le estoy queriendo decir que:","Si yo le digo a un niño: \"pareces un loro\" le estoy queriendo decir que:","INTERPRETACION__1", sep = "%", remove = TRUE) %>%
+  unite("Si yo te digo que: \"quiero un abrazo de oso\" te estoy queriendo decir que:","Si yo te digo que: \"quiero un abrazo de oso\" te estoy queriendo decir que:","INTERPRETACION__2", sep = "%", remove = TRUE) %>%
+  unite("Si yo digo que \"Felipe se puso rojo como un tomate\" estoy queriendo decir que:","Si yo digo que \"Felipe se puso rojo como un tomate\" estoy queriendo decir que:","INTERPRETACION__3", sep = "%", remove = TRUE) %>%
+  unite("Si yo digo que \"Juan camina como una tortuga\" estoy queriendo decir que:","Si yo digo que \"Juan camina como una tortuga\" estoy queriendo decir que:","INTERPRETACION__4", sep = "%", remove = TRUE) %>%
+  unite("Si yo digo que \"esos dos niños mantienen como perros y gatos\" quiero decir que:","Si yo digo que \"esos dos niños mantienen como perros y gatos\" quiero decir que:","INTERPRETACION__5", sep = "%", remove = TRUE) %>%
+  unite("Si yo digo que \"si no te portas bien te voy a dar un jalar de orejas\" estoy queriendo decir que:","Si yo digo que \"si no te portas bien te voy a dar un jalar de orejas\" estoy queriendo decir que:","INTERPRETACION__6", sep = "%", remove = TRUE) %>%
+  unite("Si yo digo \"mi mama esta que echa fuego por la boca\" quiero decir que:","Si yo digo \"mi mama esta que echa fuego por la boca\" quiero decir que:","INTERPRETACION__7", sep = "%", remove = TRUE) %>%
+  unite("Si yo digo que \"mi vecina tiene la lengua larga\" quiero decir que:","Si yo digo que \"mi vecina tiene la lengua larga\" quiero decir que:","INTERPRETACION__8", sep = "%", remove = TRUE) %>%
   select(-contains("TIPO DE LENGUAJE FIGURADO")) %>% 
   select(-contains("Marca temporal")) %>% 
-  gather(pregunta,respuesta,c("Mandragora disfrutaba de una vida sin dolores de cabeza:",
-                              "Mandragora ordeno su habitacion en un abrir y cerrar de ojos:",
-                              "Circe pierde la cabeza por un buen postre:",
-                              "Mandragora se quedo con la boca abierta:",
-                              "Abriendo los ojos como platos:",
-                              "Le habian tomado el pelo:",
-                              "Se habia dado con la puerta en las narices:",
-                              "Gritando a todo pulmon:",
-                              "Las aguas del rio rugian como leones:",
-                              "La bruja con el corazon en la boca:",
-                              "Mandragora con los nervios a flor de piel:",
-                              "Y asi como por arte de magia:")) %>%
+  gather(pregunta,respuesta,c("Si yo le digo a un niño la expresion \"no seas payaso\" le estoy queriendo decir que:",
+                              "Si yo le digo a un niño: \"pareces un loro\" le estoy queriendo decir que:",
+                              "Si yo te digo que: \"quiero un abrazo de oso\" te estoy queriendo decir que:",
+                              "Si yo digo que \"Felipe se puso rojo como un tomate\" estoy queriendo decir que:",
+                              "Si yo digo que \"Juan camina como una tortuga\" estoy queriendo decir que:",
+                              "Si yo digo que \"esos dos niños mantienen como perros y gatos\" quiero decir que:",
+                              "Si yo digo que \"si no te portas bien te voy a dar un jalar de orejas\" estoy queriendo decir que:",
+                              "Si yo digo \"mi mama esta que echa fuego por la boca\" quiero decir que:",
+                              "Si yo digo que \"mi vecina tiene la lengua larga\" quiero decir que:")) %>%
   separate(respuesta, c("respuesta","interpretacion"), sep = "%", remove = TRUE)
-names(postest_eval1) <- c("nombre","sexo","fecha_nacimiento","grado","pregunta","respuesta","interpretacion")
+names(pretest_eval2) <- c("nombre","sexo","fecha_nacimiento","grado","pregunta","respuesta","interpretacion")
+
+postest_eval2 <- read_excel("../Datos/POST_TEST_LENGUAJE FIGURADO EVALUACION 2_Vf.xlsx")
+postest_eval2 <- postest_eval2 %>% 
+  unite("Si yo le digo a un niño la expresion \"no seas payaso\" le estoy queriendo decir que:","Si yo le digo a un niño la expresion \"no seas payaso\" le estoy queriendo decir que:","INTERPRETACION", sep = "%", remove = TRUE) %>%
+  unite("Si yo le digo a un niño: \"pareces un loro\" le estoy queriendo decir que:","Si yo le digo a un niño: \"pareces un loro\" le estoy queriendo decir que:","INTERPRETACION__1", sep = "%", remove = TRUE) %>%
+  unite("Si yo te digo que: \"quiero un abrazo de oso\" te estoy queriendo decir que:","Si yo te digo que: \"quiero un abrazo de oso\" te estoy queriendo decir que:","INTERPRETACION__2", sep = "%", remove = TRUE) %>%
+  unite("Si yo digo que \"Felipe se puso rojo como un tomate\" estoy queriendo decir que:","Si yo digo que \"Felipe se puso rojo como un tomate\" estoy queriendo decir que:","INTERPRETACION__3", sep = "%", remove = TRUE) %>%
+  unite("Si yo digo que \"Juan camina como una tortuga\" estoy queriendo decir que:","Si yo digo que \"Juan camina como una tortuga\" estoy queriendo decir que:","INTERPRETACION__4", sep = "%", remove = TRUE) %>%
+  unite("Si yo digo que \"esos dos niños mantienen como perros y gatos\" quiero decir que:","Si yo digo que \"esos dos niños mantienen como perros y gatos\" quiero decir que:","INTERPRETACION__5", sep = "%", remove = TRUE) %>%
+  unite("Si yo digo que \"si no te portas bien te voy a dar un jalar de orejas\" estoy queriendo decir que:","Si yo digo que \"si no te portas bien te voy a dar un jalar de orejas\" estoy queriendo decir que:","INTERPRETACION__6", sep = "%", remove = TRUE) %>%
+  unite("Si yo digo \"mi mama esta que echa fuego por la boca\" quiero decir que:","Si yo digo \"mi mama esta que echa fuego por la boca\" quiero decir que:","INTERPRETACION__7", sep = "%", remove = TRUE) %>%
+  unite("Si yo digo que \"mi vecina tiene la lengua larga\" quiero decir que:","Si yo digo que \"mi vecina tiene la lengua larga\" quiero decir que:","INTERPRETACION__8", sep = "%", remove = TRUE) %>%
+  select(-contains("TIPO DE LENGUAJE FIGURADO")) %>% 
+  select(-contains("Marca temporal")) %>% 
+  gather(pregunta,respuesta,c("Si yo le digo a un niño la expresion \"no seas payaso\" le estoy queriendo decir que:",
+                              "Si yo le digo a un niño: \"pareces un loro\" le estoy queriendo decir que:",
+                              "Si yo te digo que: \"quiero un abrazo de oso\" te estoy queriendo decir que:",
+                              "Si yo digo que \"Felipe se puso rojo como un tomate\" estoy queriendo decir que:",
+                              "Si yo digo que \"Juan camina como una tortuga\" estoy queriendo decir que:",
+                              "Si yo digo que \"esos dos niños mantienen como perros y gatos\" quiero decir que:",
+                              "Si yo digo que \"si no te portas bien te voy a dar un jalar de orejas\" estoy queriendo decir que:",
+                              "Si yo digo \"mi mama esta que echa fuego por la boca\" quiero decir que:",
+                              "Si yo digo que \"mi vecina tiene la lengua larga\" quiero decir que:")) %>%
+  separate(respuesta, c("respuesta","interpretacion"), sep = "%", remove = TRUE)
+names(postest_eval2) <- c("nombre","sexo","fecha_nacimiento","grado","pregunta","respuesta","interpretacion")
 
 
 ggplot(pretest_eval1,aes(x =pretest_eval1$fecha_nacimiento))+geom_bar()
