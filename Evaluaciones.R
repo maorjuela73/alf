@@ -32,6 +32,7 @@ pretest_eval1 <- pretest_eval1 %>%
                                                                "Y asi como por arte de magia:")) %>%
   separate(respuesta, c("respuesta","interpretacion"), sep = "%", remove = TRUE)
 names(pretest_eval1) <- c("nombre","sexo","fecha_nacimiento","grado","pregunta","respuesta","interpretacion")
+pretest_eval1$fecha_nacimiento <- ymd(pretest_eval1$fecha_nacimiento)
 
 postest_eval1 <- read_excel("../Datos/POST_TEST_LENGUAJE FIGURADO_EVALUACION 1_Vf.xlsx")
 postest_eval1 <- postest_eval1 %>% 
@@ -63,6 +64,9 @@ postest_eval1 <- postest_eval1 %>%
                               "Y asi como por arte de magia:")) %>%
   separate(respuesta, c("respuesta","interpretacion"), sep = "%", remove = TRUE)
 names(postest_eval1) <- c("nombre","sexo","fecha_nacimiento","grado","pregunta","respuesta","interpretacion")
+postest_eval1$fecha_nacimiento <- ymd(postest_eval1$fecha_nacimiento)
+as.duration(interval(now(),postest_eval1$fecha_nacimiento))
+interval(ymd(20090201), ymd(20090101))
 
 pretest_eval2 <- read_excel("../Datos/PRE_TEST_LENGUAJE FIGURADO EVALUACION 2_Vf.xlsx")
 pretest_eval2 <- pretest_eval2 %>% 
@@ -88,6 +92,7 @@ pretest_eval2 <- pretest_eval2 %>%
                               "Si yo digo que \"mi vecina tiene la lengua larga\" quiero decir que:")) %>%
   separate(respuesta, c("respuesta","interpretacion"), sep = "%", remove = TRUE)
 names(pretest_eval2) <- c("nombre","sexo","fecha_nacimiento","grado","pregunta","respuesta","interpretacion")
+pretest_eval2$fecha_nacimiento <- ymd(pretest_eval2$fecha_nacimiento)
 
 postest_eval2 <- read_excel("../Datos/POST_TEST_LENGUAJE FIGURADO EVALUACION 2_Vf.xlsx")
 postest_eval2 <- postest_eval2 %>% 
@@ -113,7 +118,53 @@ postest_eval2 <- postest_eval2 %>%
                               "Si yo digo que \"mi vecina tiene la lengua larga\" quiero decir que:")) %>%
   separate(respuesta, c("respuesta","interpretacion"), sep = "%", remove = TRUE)
 names(postest_eval2) <- c("nombre","sexo","fecha_nacimiento","grado","pregunta","respuesta","interpretacion")
+postest_eval2$fecha_nacimiento <- ymd(postest_eval2$fecha_nacimiento)
 
+
+# Relacion entre genero y respuestas --------------------------------------
+
+names(postest_eval1) <- c("nombre","sexo","fecha_nacimiento","grado","pregunta","respuesta","interpretacion")
+
+p <- ggplot(pretest_eval1, aes(x = pregunta, fill = interpretacion))
+p + geom_bar(position = "dodge") + coord_flip() + ylab("Pregunta") + xlab("Frecuencia") + facet_grid(~sexo)
+
+p <- ggplot(pretest_eval1, aes(x = pregunta, fill = sexo))
+p + geom_bar(position = "dodge") + coord_flip() + ylab("Pregunta") + xlab("Frecuencia") + facet_grid(~interpretacion)
+
+
+# Postest -----------------------------------------------------------------
+
+
+p <- ggplot(postest_eval1, aes(x = pregunta, fill = interpretacion))
+p + geom_bar(position = "dodge") + coord_flip() + ylab("Pregunta") + xlab("Frecuencia") + facet_grid(~sexo)
+
+p <- ggplot(postest_eval1, aes(x = pregunta, fill = sexo))
+p + geom_bar(position = "dodge") + coord_flip() + ylab("Pregunta") + xlab("Frecuencia") + facet_grid(~interpretacion)
+
+
+# Comparacion post y pre --------------------------------------------------
+
+base1 <- rbind(data.frame(resptesta = c(pretest_eval1$interpretacion), tipo = "Pretest", genero = pretest_eval1$sexo), data.frame(resptesta = c(postest_eval1$interpretacion), tipo = "Postest", genero = postest_eval1$sexo))
+
+p <- ggplot(base1, aes(x = resptesta, fill = tipo))
+p + geom_bar(position = "dodge") + coord_flip() + ylab("Pregunta") + xlab("Frecuencia") + facet_grid(~genero)
+
+
+p <- ggplot(postest_eval1, aes(x = pregunta, fill = interpretacion))
+p + geom_bar() + coord_flip() + ylab("Pregunta") + xlab("Frecuencia")
 
 ggplot(pretest_eval1,aes(x =pretest_eval1$fecha_nacimiento))+geom_bar()
+
+table(pretest_eval1$interpretacion , pretest_eval1$pregunta)
+table(postest_eval1$interpretacion , postest_eval1$pregunta)
+
+chisq.test(base1$resptesta, base1$tipo)
+
+
+ggplot(base1, aes(resptesta, fill = tipo)) + geom_bar(position = "dodge")
+
+p <- ggplot(postest_eval1, aes(x = pregunta, fill = interpretacion))
+p + geom_bar(position = "dodge") + coord_flip() + ylab("Pregunta") + xlab("Frecuencia") + facet_grid(~sexo)
+
+
 
