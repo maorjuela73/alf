@@ -33,6 +33,7 @@ pretest_eval1 <- pretest_eval1 %>%
   separate(respuesta, c("respuesta","interpretacion"), sep = "%", remove = TRUE)
 names(pretest_eval1) <- c("nombre","sexo","fecha_nacimiento","grado","pregunta","respuesta","interpretacion")
 pretest_eval1$fecha_nacimiento <- ymd(pretest_eval1$fecha_nacimiento)
+pretest_eval1[,"edad"] <- as.duration(interval(now(),pretest_eval1$fecha_nacimiento))
 
 postest_eval1 <- read_excel("../Datos/POST_TEST_LENGUAJE FIGURADO_EVALUACION 1_Vf.xlsx")
 postest_eval1 <- postest_eval1 %>% 
@@ -65,8 +66,7 @@ postest_eval1 <- postest_eval1 %>%
   separate(respuesta, c("respuesta","interpretacion"), sep = "%", remove = TRUE)
 names(postest_eval1) <- c("nombre","sexo","fecha_nacimiento","grado","pregunta","respuesta","interpretacion")
 postest_eval1$fecha_nacimiento <- ymd(postest_eval1$fecha_nacimiento)
-as.duration(interval(now(),postest_eval1$fecha_nacimiento))
-interval(ymd(20090201), ymd(20090101))
+postest_eval1[,"edad"] <- as.duration(interval(now(),postest_eval1$fecha_nacimiento))
 
 pretest_eval2 <- read_excel("../Datos/PRE_TEST_LENGUAJE FIGURADO EVALUACION 2_Vf.xlsx")
 pretest_eval2 <- pretest_eval2 %>% 
@@ -92,7 +92,10 @@ pretest_eval2 <- pretest_eval2 %>%
                               "Si yo digo que \"mi vecina tiene la lengua larga\" quiero decir que:")) %>%
   separate(respuesta, c("respuesta","interpretacion"), sep = "%", remove = TRUE)
 names(pretest_eval2) <- c("nombre","sexo","fecha_nacimiento","grado","pregunta","respuesta","interpretacion")
-pretest_eval2$fecha_nacimiento <- ymd(pretest_eval2$fecha_nacimiento)
+pretest_eval2[,"fecha_nacimiento"] <- ymd(pretest_eval2$fecha_nacimiento)
+pretest_eval2[,"edad"] <- as.duration(interval(pretest_eval2$fecha_nacimiento,now()))
+ggplot(edades,aes(x=))
+
 
 postest_eval2 <- read_excel("../Datos/POST_TEST_LENGUAJE FIGURADO EVALUACION 2_Vf.xlsx")
 postest_eval2 <- postest_eval2 %>% 
