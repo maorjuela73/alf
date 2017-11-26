@@ -153,7 +153,7 @@ base_alf <- pretest_eval1 %>%
 
 # Información personal
 
-ip_pretest_eval1 <- pretest_eval1[,c("nombre","sexo","fecha_nacimiento","grado","edad")] %>% 
+ip_pretest <- base_alf[,c("evaluacion","nombre","sexo","fecha_nacimiento","edad","grado")] %>% 
   distinct()
 
 edad_hist <- ggplot(ip_pretest_eval1,aes(edad))
