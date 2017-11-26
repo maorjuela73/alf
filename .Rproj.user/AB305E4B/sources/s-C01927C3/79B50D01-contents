@@ -41,6 +41,7 @@ pretest_eval1[,"edad"] <- interval(pretest_eval1$fecha_nacimiento,now()) %>%
   as.period() %>% # Puede ser as.duration?
   year() %>% 
   as.numeric("years")
+pretest_eval1[,"evaluacion"] <- "pretest_eval1"
 
 postest_eval1 <- read_excel("../Datos/POST_TEST_LENGUAJE FIGURADO_EVALUACION 1_Vf.xlsx")
 postest_eval1 <- postest_eval1 %>% 
@@ -77,6 +78,7 @@ postest_eval1[,"edad"] <- interval(postest_eval1$fecha_nacimiento,now()) %>%
   as.period() %>% # Puede ser as.duration?
   year() %>% 
   as.numeric("years")
+postest_eval1[,"evaluacion"] <- "postest_eval1"
 
 pretest_eval2 <- read_excel("../Datos/PRE_TEST_LENGUAJE FIGURADO EVALUACION 2_Vf.xlsx")
 pretest_eval2 <- pretest_eval2 %>% 
@@ -107,6 +109,7 @@ pretest_eval2[,"edad"] <- interval(pretest_eval2$fecha_nacimiento,now()) %>%
   as.period() %>% # Puede ser as.duration?
   year() %>% 
   as.numeric("years")
+pretest_eval2[,"evaluacion"] <- "pretest_eval2"
 
 postest_eval2 <- read_excel("../Datos/POST_TEST_LENGUAJE FIGURADO EVALUACION 2_Vf.xlsx")
 postest_eval2 <- postest_eval2 %>% 
@@ -137,14 +140,29 @@ postest_eval2[,"edad"] <- interval(postest_eval2$fecha_nacimiento,now()) %>%
   as.period() %>% # Puede ser as.duration?
   year() %>% 
   as.numeric("years")
+postest_eval2[,"evaluacion"] <- "postest_eval2"
+
+# Tabla de datos consolidada
+base_alf <- pretest_eval1 %>% 
+  bind_rows(postest_eval1) %>% 
+  bind_rows(pretest_eval2) %>% 
+  bind_rows(postest_eval2)
+
 
 # Análisis ----------------------------------------------------------------
 
+# Información personal
 
-# EDAD
+ip_pretest_eval1 <- pretest_eval1[,c("nombre","sexo","fecha_nacimiento","grado","edad")] %>% 
+  distinct()
 
-p <- ggplot(pretest_eval1,aes(edad))
-p + geom_bar()
+edad_hist <- ggplot(ip_pretest_eval1,aes(edad))
+edad_hist + geom_bar()
+
+# Edad
+
+
+
 
 
 dist_edades <- ggplot(pretest_eval1,aes(edad)
