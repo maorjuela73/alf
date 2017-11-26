@@ -2,5 +2,5 @@
 *
 
 # But not these files...
-Evaluaciones.R
-template.latex
+!.gitignore
+!Evaluaciones.R
