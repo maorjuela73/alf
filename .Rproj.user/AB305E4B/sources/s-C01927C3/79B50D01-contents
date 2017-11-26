@@ -122,11 +122,30 @@ names(postest_eval2) <- c("nombre","sexo","fecha_nacimiento","grado","pregunta",
 postest_eval2$fecha_nacimiento <- ymd(postest_eval2$fecha_nacimiento)
 postest_eval2[,"edad"] <- as.duration(interval(now(),postest_eval2$fecha_nacimiento))
 
+
 # EDAD
 
-edadplot <- ggplot(pretest_eval1,aes(interpretacion,fecha_nacimiento))
-edadplot + geom_boxplot()
-edadplot + geom_boxplot() + facet_grid(~sexo)
+date <- now()
+year(date)
+minute(date)
+month(date,T,F)
+day(date)
+day(date) <- 40
+
+a <- pretest_eval1$edad
+b <- years(pretest_eval1$edad)
+
+yday(pretest_eval1$fecha_nacimiento)
+dist_edades <- ggplot(pretest_eval1,aes())
+dist_edades + geom_histogram()
+
+fechanac <- ggplot(pretest_eval1,aes(interpretacion,fecha_nacimiento,fill=sexo))
+fechanac + geom_boxplot()
+fechanac + geom_boxplot() + facet_grid(~sexo)
+
+fechanac2 <- ggplot(pretest_eval1,aes(sexo,fecha_nacimiento,fill=interpretacion))
+fechanac2 + geom_boxplot()
+fechanac2 + geom_boxplot() + facet_grid(~interpretacion)
 
 
 # Relacion entre genero y respuestas --------------------------------------
