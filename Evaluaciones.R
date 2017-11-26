@@ -1,8 +1,12 @@
+# Librerías ---------------------------------------------------------------
+
 library("tidyverse", lib.loc="~/R/win-library/3.4")
 library("readxl", lib.loc="~/R/win-library/3.4")
 library("lubridate", lib.loc="~/R/win-library/3.4")
 
-pretest_eval1 <- read_excel("../../Datos/PRE_TEST_LENGUAJE FIGURADO_EVALUACION 1_Vf.xlsx")
+# Carga de datos ----------------------------------------------------------
+
+pretest_eval1 <- read_excel("../Datos/PRE_TEST_LENGUAJE FIGURADO_EVALUACION 1_Vf.xlsx")
 pretest_eval1 <- pretest_eval1 %>% 
   unite("Mandragora disfrutaba de una vida sin dolores de cabeza:","Mandragora disfrutaba de una vida sin dolores de cabeza:","INTERPRETACION", sep = "%", remove = TRUE) %>%
   unite("Mandragora ordeno su habitacion en un abrir y cerrar de ojos:","Mandragora ordeno su habitacion en un abrir y cerrar de ojos:","INTERPRETACION__1", sep = "%", remove = TRUE) %>%
@@ -33,9 +37,12 @@ pretest_eval1 <- pretest_eval1 %>%
   separate(respuesta, c("respuesta","interpretacion"), sep = "%", remove = TRUE)
 names(pretest_eval1) <- c("nombre","sexo","fecha_nacimiento","grado","pregunta","respuesta","interpretacion")
 pretest_eval1$fecha_nacimiento <- ymd(pretest_eval1$fecha_nacimiento)
-pretest_eval1[,"edad"] <- as.duration(interval(now(),pretest_eval1$fecha_nacimiento))
+pretest_eval1[,"edad"] <- interval(pretest_eval1$fecha_nacimiento,now()) %>% 
+  as.period() %>% # Puede ser as.duration?
+  year() %>% 
+  as.numeric("years")
 
-postest_eval1 <- read_excel("../../Datos/POST_TEST_LENGUAJE FIGURADO_EVALUACION 1_Vf.xlsx")
+postest_eval1 <- read_excel("../Datos/POST_TEST_LENGUAJE FIGURADO_EVALUACION 1_Vf.xlsx")
 postest_eval1 <- postest_eval1 %>% 
   unite("Mandragora disfrutaba de una vida sin dolores de cabeza:","Mandragora disfrutaba de una vida sin dolores de cabeza:","INTERPRETACION", sep = "%", remove = TRUE) %>%
   unite("Mandragora ordeno su habitacion en un abrir y cerrar de ojos:","Mandragora ordeno su habitacion en un abrir y cerrar de ojos:","INTERPRETACION__1", sep = "%", remove = TRUE) %>%
@@ -66,9 +73,12 @@ postest_eval1 <- postest_eval1 %>%
   separate(respuesta, c("respuesta","interpretacion"), sep = "%", remove = TRUE)
 names(postest_eval1) <- c("nombre","sexo","fecha_nacimiento","grado","pregunta","respuesta","interpretacion")
 postest_eval1$fecha_nacimiento <- ymd(postest_eval1$fecha_nacimiento)
-postest_eval1[,"edad"] <- as.duration(interval(now(),postest_eval1$fecha_nacimiento))
+postest_eval1[,"edad"] <- interval(postest_eval1$fecha_nacimiento,now()) %>% 
+  as.period() %>% # Puede ser as.duration?
+  year() %>% 
+  as.numeric("years")
 
-pretest_eval2 <- read_excel("../../Datos/PRE_TEST_LENGUAJE FIGURADO EVALUACION 2_Vf.xlsx")
+pretest_eval2 <- read_excel("../Datos/PRE_TEST_LENGUAJE FIGURADO EVALUACION 2_Vf.xlsx")
 pretest_eval2 <- pretest_eval2 %>% 
   unite("Si yo le digo a un niño la expresion \"no seas payaso\" le estoy queriendo decir que:","Si yo le digo a un niño la expresion \"no seas payaso\" le estoy queriendo decir que:","INTERPRETACION", sep = "%", remove = TRUE) %>%
   unite("Si yo le digo a un niño: \"pareces un loro\" le estoy queriendo decir que:","Si yo le digo a un niño: \"pareces un loro\" le estoy queriendo decir que:","INTERPRETACION__1", sep = "%", remove = TRUE) %>%
@@ -93,9 +103,12 @@ pretest_eval2 <- pretest_eval2 %>%
   separate(respuesta, c("respuesta","interpretacion"), sep = "%", remove = TRUE)
 names(pretest_eval2) <- c("nombre","sexo","fecha_nacimiento","grado","pregunta","respuesta","interpretacion")
 pretest_eval2$fecha_nacimiento <- ymd(pretest_eval2$fecha_nacimiento)
-pretest_eval2[,"edad"] <- as.duration(interval(now(),pretest_eval2$fecha_nacimiento))
+pretest_eval2[,"edad"] <- interval(pretest_eval2$fecha_nacimiento,now()) %>% 
+  as.period() %>% # Puede ser as.duration?
+  year() %>% 
+  as.numeric("years")
 
-postest_eval2 <- read_excel("../../Datos/POST_TEST_LENGUAJE FIGURADO EVALUACION 2_Vf.xlsx")
+postest_eval2 <- read_excel("../Datos/POST_TEST_LENGUAJE FIGURADO EVALUACION 2_Vf.xlsx")
 postest_eval2 <- postest_eval2 %>% 
   unite("Si yo le digo a un niño la expresion \"no seas payaso\" le estoy queriendo decir que:","Si yo le digo a un niño la expresion \"no seas payaso\" le estoy queriendo decir que:","INTERPRETACION", sep = "%", remove = TRUE) %>%
   unite("Si yo le digo a un niño: \"pareces un loro\" le estoy queriendo decir que:","Si yo le digo a un niño: \"pareces un loro\" le estoy queriendo decir que:","INTERPRETACION__1", sep = "%", remove = TRUE) %>%
@@ -120,29 +133,24 @@ postest_eval2 <- postest_eval2 %>%
   separate(respuesta, c("respuesta","interpretacion"), sep = "%", remove = TRUE)
 names(postest_eval2) <- c("nombre","sexo","fecha_nacimiento","grado","pregunta","respuesta","interpretacion")
 postest_eval2$fecha_nacimiento <- ymd(postest_eval2$fecha_nacimiento)
-postest_eval2[,"Edad Años"] <- difftime(now(), postest_eval2$fecha_nacimiento, unit = "weeks")$
-# postest_eval2[,"edad"] <- as.duration(interval(postest_eval2$fecha_nacimiento, now()))
-# %>% as.numeric()
+postest_eval2[,"edad"] <- interval(postest_eval2$fecha_nacimiento,now()) %>% 
+  as.period() %>% # Puede ser as.duration?
+  year() %>% 
+  as.numeric("years")
 
+# Análisis ----------------------------------------------------------------
 
-p <- ggplot(postest_eval2, aes(x = interpretacion, y = edad, fill = sexo))
-p + geom_boxplot()
-
-dur <- duration(, ostest_eval1$edad, "hours")
-
-edades <- postest_eval2$edad
-
-as.numeric(edades, "years")
-
-
-edades
 
 # EDAD
+
+p <- ggplot(pretest_eval1,aes(edad))
+p + geom_bar()
+
 
 dist_edades <- ggplot(pretest_eval1,aes(edad)
 
 
-                      fechanac <- ggplot(pretest_eval1,aes(interpretacion,fecha_nacimiento))
+fechanac <- ggplot(pretest_eval1,aes(interpretacion,fecha_nacimiento))
 fechanac + geom_boxplot()
 fechanac + geom_boxplot() + facet_grid(~sexo)
 
