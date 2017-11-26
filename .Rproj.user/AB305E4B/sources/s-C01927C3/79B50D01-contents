@@ -92,10 +92,8 @@ pretest_eval2 <- pretest_eval2 %>%
                               "Si yo digo que \"mi vecina tiene la lengua larga\" quiero decir que:")) %>%
   separate(respuesta, c("respuesta","interpretacion"), sep = "%", remove = TRUE)
 names(pretest_eval2) <- c("nombre","sexo","fecha_nacimiento","grado","pregunta","respuesta","interpretacion")
-pretest_eval2[,"fecha_nacimiento"] <- ymd(pretest_eval2$fecha_nacimiento)
-pretest_eval2[,"edad"] <- as.duration(interval(pretest_eval2$fecha_nacimiento,now()))
-ggplot(edades,aes(x=))
-
+pretest_eval2$fecha_nacimiento <- ymd(pretest_eval2$fecha_nacimiento)
+pretest_eval2[,"edad"] <- as.duration(interval(now(),pretest_eval2$fecha_nacimiento))
 
 postest_eval2 <- read_excel("../Datos/POST_TEST_LENGUAJE FIGURADO EVALUACION 2_Vf.xlsx")
 postest_eval2 <- postest_eval2 %>% 
@@ -122,15 +120,25 @@ postest_eval2 <- postest_eval2 %>%
   separate(respuesta, c("respuesta","interpretacion"), sep = "%", remove = TRUE)
 names(postest_eval2) <- c("nombre","sexo","fecha_nacimiento","grado","pregunta","respuesta","interpretacion")
 postest_eval2$fecha_nacimiento <- ymd(postest_eval2$fecha_nacimiento)
+postest_eval2[,"edad"] <- as.duration(interval(now(),postest_eval2$fecha_nacimiento))
+
+# EDAD
+
+edadplot <- ggplot(pretest_eval1,aes(interpretacion,fecha_nacimiento))
+edadplot + geom_boxplot()
+edadplot + geom_boxplot() + facet_grid(~sexo)
 
 
 # Relacion entre genero y respuestas --------------------------------------
 
+# TODO Separarlo a nivel general
 names(postest_eval1) <- c("nombre","sexo","fecha_nacimiento","grado","pregunta","respuesta","interpretacion")
 
 p <- ggplot(pretest_eval1, aes(x = pregunta, fill = interpretacion))
+p + geom_bar(position = "dodge") + coord_flip() + ylab("Pregunta") + xlab("Frecuencia") #+ facet_grid(~sexo)
 p + geom_bar(position = "dodge") + coord_flip() + ylab("Pregunta") + xlab("Frecuencia") + facet_grid(~sexo)
 
+# TODO hacerla en general, poner frecuencias relativas
 p <- ggplot(pretest_eval1, aes(x = pregunta, fill = sexo))
 p + geom_bar(position = "dodge") + coord_flip() + ylab("Pregunta") + xlab("Frecuencia") + facet_grid(~interpretacion)
 
@@ -170,4 +178,6 @@ p <- ggplot(postest_eval1, aes(x = pregunta, fill = interpretacion))
 p + geom_bar(position = "dodge") + coord_flip() + ylab("Pregunta") + xlab("Frecuencia") + facet_grid(~sexo)
 
 
+# TODO respecto a genero, sacar boxplots sobre grados y edades
 
+# En evaluación 2 se desar mirar si hay diferencias por el tipo de pregunta (simil, metáfora, metonimia)
