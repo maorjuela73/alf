@@ -120,7 +120,21 @@ postest_eval2 <- postest_eval2 %>%
   separate(respuesta, c("respuesta","interpretacion"), sep = "%", remove = TRUE)
 names(postest_eval2) <- c("nombre","sexo","fecha_nacimiento","grado","pregunta","respuesta","interpretacion")
 postest_eval2$fecha_nacimiento <- ymd(postest_eval2$fecha_nacimiento)
-postest_eval2[,"edad"] <- as.duration(interval(now(),postest_eval2$fecha_nacimiento))
+postest_eval2[,"Edad Años"] <- difftime(now(), postest_eval2$fecha_nacimiento, unit = "weeks")/52
+postest_eval2[,"edad"] <- as.duration(interval(postest_eval2$fecha_nacimiento, now()))
+
+
+p <- ggplot(postest_eval2, aes(x = respuesta, y = edad, fill = genero))
+p + geom_boxplot()
+
+dur <- duration(, ostest_eval1$edad, "hours")
+
+edades <- postest_eval2$edad
+
+as.numeric(edades, "years")
+
+
+edades
 
 # EDAD
 
