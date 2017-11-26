@@ -178,6 +178,6 @@ p <- ggplot(postest_eval1, aes(x = pregunta, fill = interpretacion))
 p + geom_bar(position = "dodge") + coord_flip() + ylab("Pregunta") + xlab("Frecuencia") + facet_grid(~sexo)
 
 
-# TODO respecto a genero, sacar boxplots sobre grados y edades
+# TODO respecto a genero, sacar boxplots sobre grados y edades TODO es hacer
 
 # En evaluación 2 se desar mirar si hay diferencias por el tipo de pregunta (simil, metáfora, metonimia)
