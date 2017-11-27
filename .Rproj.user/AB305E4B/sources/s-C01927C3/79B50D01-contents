@@ -3,6 +3,7 @@
 library("tidyverse", lib.loc="~/R/win-library/3.4")
 library("readxl", lib.loc="~/R/win-library/3.4")
 library("lubridate", lib.loc="~/R/win-library/3.4")
+library("scales", lib.loc="~/R/win-library/3.4")
 
 # Carga de datos ----------------------------------------------------------
 
@@ -153,28 +154,65 @@ base_alf <- pretest_eval1 %>%
 
 # Información personal
 
-ip_pretest <- base_alf[,c("evaluacion","nombre","sexo","fecha_nacimiento","edad","grado")] %>% 
-  distinct()
+#write_excel_csv(distinct(base_alf[,"nombre"]),"../Datos/correcion_nombres.xlsx")
+distinct(base_alf[,"nombre"]) # Nombres de niños
+nombres <- distinct(pretest_eval1[,"nombre"]) %>% 
+  full_join(distinct(postest_eval1[,"nombre"]), copy = T) %>% 
+  full_join(distinct(pretest_eval2[,"nombre"]), copy = T) %>%
+  full_join(distinct(postest_eval2[,"nombre"]), copy = T) 
 
-edad_hist <- ggplot(ip_pretest_eval1,aes(edad))
-edad_hist + geom_bar()
+ip_pretest <- base_alf[,c("nombre","sexo","fecha_nacimiento","edad","grado")] %>% 
+  distinct() %>% 
+  count(grado,edad,sexo) 
 
-# Edad
+gruposexo <- ip_pretest %>% group_by(sexo) %>% summarise(n=sum(n))
+grupoedad <- ip_pretest %>% group_by(edad) %>% summarise(n=sum(n))
+grupogrado <- ip_pretest %>% group_by(grado) %>% summarise(n=sum(n))
+
+grupoedadgrado <- ip_pretest %>% group_by(edad,grado) %>% summarise(n=sum(n))
+
+ggplot(grupoedadgrado, aes(x=edad,y=n,fill=grado)) +
+  geom_bar(stat = "identity",position="dodge") +
+  geom_text(aes(label=n), position=position_dodge(width = 1), vjust=-0.4)
+  
+ggplot(ip_pretest, aes(x=edad,y=n,fill=grado)) + 
+  geom_bar(stat = "identity",position="dodge") + 
+  geom_text(aes(label=n), position=position_dodge(width = 1), vjust=-0.4) +
+  facet_grid(.~sexo)
+
+grupoedadsexo <-  ip_pretest %>% group_by(edad,sexo) %>% summarise(n=sum(n))
+
+ggplot(grupoedadsexo, aes(x=edad,y=factor(n),fill=sexo)) + 
+  geom_bar(stat = "identity",position="dodge") +
+  geom_text(aes(label=n), position=position_dodge(width = 1), vjust=-0.4)
+
+ggplot(ip_pretest, aes(x=edad,y=n,fill=sexo)) + 
+  geom_bar(stat = "identity",position="dodge") + 
+  geom_text(aes(label=n), position=position_dodge(width = 1),vjust=-0.4) +
+  facet_grid(.~grado)
+
+# Análisis por Edad - Verificar si la edad tiene un efecto importante en la comprensión del lenguaje figurado
+
+grupoedadinterpretacion <- base_alf %>% 
+  group_by(evaluacion,edad,interpretacion) %>% 
+  summarise(n=n())
+
+ggplot(grupoedadinterpretacion,aes(x = edad, y=n, fill = interpretacion))+
+  geom_bar(stat = "identity",position = "fill")+ 
+  geom_text(aes(label=n),position = position_fill(vjust = .5))+
+  facet_grid(~evaluacion)
+
+grupoedadinterpretaciontally <- grupoedadinterpretacion %>% group_by(evaluacion,edad) %>% add_tally()
+
+ggplot(grupoedadinterpretaciontally,aes(x = edad, y=n, fill = interpretacion))+
+  geom_bar(stat = "identity",position = "fill")+ 
+  geom_text(aes(label=signif(n/nn,2)),position = position_fill(vjust = .5))+
+  facet_grid(~evaluacion)
+
+# TODO Encontrar si la diferencia es significativa entre pretest y postest
 
 
 
-
-
-dist_edades <- ggplot(pretest_eval1,aes(edad)
-
-
-fechanac <- ggplot(pretest_eval1,aes(interpretacion,fecha_nacimiento))
-fechanac + geom_boxplot()
-fechanac + geom_boxplot() + facet_grid(~sexo)
-
-fechanac2 <- ggplot(pretest_eval1,aes(sexo,fecha_nacimiento))
-fechanac2 + geom_boxplot()
-fechanac2 + geom_boxplot() + facet_grid(~interpretacion)
 
 
 # Relacion entre genero y respuestas --------------------------------------
