@@ -417,7 +417,7 @@ gruposexorespuestas_1tally <- gruposexorespuestas_1 %>% group_by(tratamiento,sex
 
 ggplot(gruposexorespuestas_1tally, aes(x = pregunta, y = n, fill = interpretacion )) +
   geom_bar(stat = "identity",position = "fill") +
-  geom_text(aes(label=signif(n/nn,2)),position = position_fill(vjust = .5))+
+  geom_text(aes(label=paste0(round(signif(n/nn,2)*100), "%")),position = position_fill(vjust = .5))+
   coord_flip() +
   facet_grid(sexo~tratamiento)
 
@@ -542,5 +542,16 @@ p + geom_bar(position = "dodge") + coord_flip() + ylab("Pregunta") + xlab("Frecu
 # TODO respecto a genero, sacar boxplots sobre grados y edades TODO es hacer
 
 # En evaluación 2 se desar mirar si hay diferencias por el tipo de pregunta (simil, metáfora, metonimia)
+
+base_alf1 <- filter(base_alf, tratamiento == "pretest")
+salida <- list(prop.table(table(base_alf1$interpretacion, base_alf1$sexo)),prop.table(table(base_alf1$interpretacion, base_alf1$sexo),1), prop.table(table(base_alf1$interpretacion, base_alf1$sexo),2), (table(base_alf1$interpretacion, base_alf1$sexo)))
+salida <- do.call(rbind, salida)
+write.table(salida, "salida.txt")
+
+salida1 <- table(base_alf1$interpretacion, base_alf1$sexo) %>% prop.table(.,1) %>% data.table() %>% setnames(., names(.), c("Interpretacion", "Sexo", "Porcentaje")) 
+ggplot(salida1, aes(Interpretacion, Porcentaje, fill = Sexo)) + geom_bar(stat = "identity", position = "fill")+
+  geom_text(aes(label=paste0(round(Porcentaje*100), "%")),position = position_fill(vjust = .5))
+
+chisq.test(table(base_alf1$interpretacion, base_alf1$sexo))
 
 
