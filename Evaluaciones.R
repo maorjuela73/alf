@@ -419,7 +419,11 @@ gruposexorespuestas_1tally <- gruposexorespuestas_1 %>% group_by(tratamiento,sex
 
 ggplot(gruposexorespuestas_1tally, aes(x = pregunta, y = n, fill = interpretacion )) +
   geom_bar(stat = "identity",position = "fill") +
+<<<<<<< HEAD
   geom_text(aes(label=percent(signif(n/nn,2))),position = position_fill(vjust = .5))+
+=======
+  geom_text(aes(label=paste0(round(signif(n/nn,2)*100), "%")),position = position_fill(vjust = .5))+
+>>>>>>> b64b599a23b34100d857c60ec55b509d939e8438
   coord_flip() +
   facet_grid(sexo~tratamiento,labeller = label_both)
 
@@ -487,4 +491,77 @@ ggplot(grupocontextorespuestas_2tally, aes(x = pregunta, y = n, fill = interpret
   geom_bar(stat = "identity",position = "fill") +
   geom_text(aes(label=percent(signif(n/nn,2))),position = position_fill(vjust = .5))+
   coord_flip() +
+<<<<<<< HEAD
   facet_grid(contexto~tratamiento, scales = "free", space = "free",labeller = label_both)
+=======
+  facet_grid(contexto~tratamiento, scales = "free", space = "free")
+
+
+
+
+# PRIMER INTENTO Relacion entre genero y respuestas --------------------------------------
+
+# TODO Separarlo a nivel general
+names(postest_eval1) <- c("nombre","sexo","fecha_nacimiento","grado","pregunta","respuesta","interpretacion")
+
+p <- ggplot(pretest_eval1, aes(x = pregunta, fill = interpretacion))
+p + geom_bar(position = "dodge") + coord_flip() + ylab("Pregunta") + xlab("Frecuencia") #+ facet_grid(~sexo)
+p + geom_bar(position = "dodge") + coord_flip() + ylab("Pregunta") + xlab("Frecuencia") + facet_grid(~sexo)
+
+# TODO hacerla en general, poner frecuencias relativas
+p <- ggplot(pretest_eval1, aes(x = pregunta, fill = sexo))
+p + geom_bar(position = "dodge") + coord_flip() + ylab("Pregunta") + xlab("Frecuencia") + facet_grid(~interpretacion)
+
+
+# Postest -----------------------------------------------------------------
+
+
+p <- ggplot(postest_eval1, aes(x = pregunta, fill = interpretacion))
+p + geom_bar(position = "dodge") + coord_flip() + ylab("Pregunta") + xlab("Frecuencia") + facet_grid(~sexo)
+
+p <- ggplot(postest_eval1, aes(x = pregunta, fill = sexo))
+p + geom_bar(position = "dodge") + coord_flip() + ylab("Pregunta") + xlab("Frecuencia") + facet_grid(~interpretacion)
+
+
+# Comparacion post y pre --------------------------------------------------
+
+base1 <- rbind(data.frame(resptesta = c(pretest_eval1$interpretacion), tipo = "Pretest", genero = pretest_eval1$sexo), data.frame(resptesta = c(postest_eval1$interpretacion), tipo = "Postest", genero = postest_eval1$sexo))
+
+p <- ggplot(base1, aes(x = resptesta, fill = tipo))
+p + geom_bar(position = "dodge") + coord_flip() + ylab("Pregunta") + xlab("Frecuencia") + facet_grid(~genero)
+
+
+p <- ggplot(postest_eval1, aes(x = pregunta, fill = interpretacion))
+p + geom_bar() + coord_flip() + ylab("Pregunta") + xlab("Frecuencia")
+
+ggplot(pretest_eval1,aes(x =pretest_eval1$fecha_nacimiento))+geom_bar()
+
+table(pretest_eval1$interpretacion , pretest_eval1$pregunta)
+table(postest_eval1$interpretacion , postest_eval1$pregunta)
+
+chisq.test(base1$resptesta, base1$tipo)
+
+
+ggplot(base1, aes(resptesta, fill = tipo)) + geom_bar(position = "dodge")
+
+p <- ggplot(postest_eval1, aes(x = pregunta, fill = interpretacion))
+p + geom_bar(position = "dodge") + coord_flip() + ylab("Pregunta") + xlab("Frecuencia") + facet_grid(~sexo)
+
+
+# TODO respecto a genero, sacar boxplots sobre grados y edades TODO es hacer
+
+# En evaluación 2 se desar mirar si hay diferencias por el tipo de pregunta (simil, metáfora, metonimia)
+
+base_alf1 <- filter(base_alf, tratamiento == "pretest")
+salida <- list(prop.table(table(base_alf1$interpretacion, base_alf1$sexo)),prop.table(table(base_alf1$interpretacion, base_alf1$sexo),1), prop.table(table(base_alf1$interpretacion, base_alf1$sexo),2), (table(base_alf1$interpretacion, base_alf1$sexo)))
+salida <- do.call(rbind, salida)
+write.table(salida, "salida.txt")
+
+salida1 <- table(base_alf1$interpretacion, base_alf1$sexo) %>% prop.table(.,1) %>% data.table() %>% setnames(., names(.), c("Interpretacion", "Sexo", "Porcentaje")) 
+ggplot(salida1, aes(Interpretacion, Porcentaje, fill = Sexo)) + geom_bar(stat = "identity", position = "fill")+
+  geom_text(aes(label=paste0(round(Porcentaje*100), "%")),position = position_fill(vjust = .5))
+
+chisq.test(table(base_alf1$interpretacion, base_alf1$sexo))
+
+
+>>>>>>> b64b599a23b34100d857c60ec55b509d939e8438
