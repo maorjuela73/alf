@@ -419,11 +419,7 @@ gruposexorespuestas_1tally <- gruposexorespuestas_1 %>% group_by(tratamiento,sex
 
 ggplot(gruposexorespuestas_1tally, aes(x = pregunta, y = n, fill = interpretacion )) +
   geom_bar(stat = "identity",position = "fill") +
-<<<<<<< HEAD
   geom_text(aes(label=percent(signif(n/nn,2))),position = position_fill(vjust = .5))+
-=======
-  geom_text(aes(label=paste0(round(signif(n/nn,2)*100), "%")),position = position_fill(vjust = .5))+
->>>>>>> b64b599a23b34100d857c60ec55b509d939e8438
   coord_flip() +
   facet_grid(sexo~tratamiento,labeller = label_both)
 
@@ -491,10 +487,11 @@ ggplot(grupocontextorespuestas_2tally, aes(x = pregunta, y = n, fill = interpret
   geom_bar(stat = "identity",position = "fill") +
   geom_text(aes(label=percent(signif(n/nn,2))),position = position_fill(vjust = .5))+
   coord_flip() +
-<<<<<<< HEAD
   facet_grid(contexto~tratamiento, scales = "free", space = "free",labeller = label_both)
-=======
-  facet_grid(contexto~tratamiento, scales = "free", space = "free")
+
+
+
+
 
 
 
@@ -564,4 +561,3 @@ ggplot(salida1, aes(Interpretacion, Porcentaje, fill = Sexo)) + geom_bar(stat = 
 chisq.test(table(base_alf1$interpretacion, base_alf1$sexo))
 
 
->>>>>>> b64b599a23b34100d857c60ec55b509d939e8438
