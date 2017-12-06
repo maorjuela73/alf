@@ -512,7 +512,34 @@ preguntas$pregunta <-
       "Si yo digo que \"mi vecina tiene la lengua larga\" quiero decir que:"
     )
   )
-names(preguntas) <- c("pregunta","figura","caracterizacion")
+preguntas$pregunta_corta <- 
+  ordered(
+    preguntas$pregunta_corta,
+    levels = c(
+      "Mandragora disfrutaba de una vida sin dolores de cabeza",
+      "Mandragora ordeno su habitacion en un abrir y cerrar de ojos",
+      "Circe pierde la cabeza por un buen postre",
+      "Mandragora se quedo con la boca abierta",
+      "Abriendo los ojos como platos",
+      "Le habian tomado el pelo",
+      "Se habia dado con la puerta en las narices",
+      "Gritando a todo pulmon",
+      "Las aguas del rio rugian como leones",
+      "La bruja con el corazon en la boca",
+      "Mandragora con los nervios a flor de piel",
+      "Y asi como por arte de magia",
+      "No seas payaso",
+      "Pareces un loro",
+      "Quiero un abrazo de oso",
+      "Se puso rojo como un tomate",
+      "Camina como una tortuga",
+      "Mantienen como perros y gatos",
+      "Te voy a dar un jalón de orejas",
+      "Está que echa fuego por la boca",
+      "Tiene la lengua larga"
+    )
+  )
+names(preguntas) <- c("pregunta","figura","caracterizacion","pregunta_corta")
 preguntas <- preguntas %>% 
   mutate(
     figura = case_when(
@@ -670,46 +697,48 @@ ggplot(gruporespuestas_solotallyd,
 # Caracterizacion Primera evaluación
 gruporespuestas_1 <-  base_alf %>%
   left_join(select(preguntas,-caracterizacion), by = "pregunta") %>%
-  group_by(tratamiento, caracterizacion, pregunta, interpretacion) %>%
+  group_by(tratamiento, caracterizacion, pregunta_corta, interpretacion) %>%
   summarise(n = n()) %>%
   filter(caracterizacion == "Caracterización 1")
 gruporespuestas_1
 
 gruporespuestas_1tally <-
   gruporespuestas_1 %>% 
-  group_by(tratamiento, caracterizacion, pregunta) %>% 
+  group_by(tratamiento, caracterizacion, pregunta_corta) %>% 
   add_tally()
 gruporespuestas_1tally$interpretacion <-
   ordered(gruporespuestas_1tally$interpretacion,
           c("Figurativa", "Literal", "Distractor"))
-gruporespuestas_1tally$pregunta <- droplevels(gruporespuestas_1tally$pregunta)
+gruporespuestas_1tally$pregunta_corta <- droplevels(gruporespuestas_1tally$pregunta_corta)
 
 ggplot(gruporespuestas_1tally,
-  aes(x = forcats::fct_rev(pregunta), y = n, fill = interpretacion)) +
+  aes(x = forcats::fct_rev(pregunta_corta), y = n, fill = interpretacion)) +
   scale_fill_hue("Interpretación",h.start = 236)+
   geom_bar(stat = "identity", position = position_fill(reverse = TRUE)) +
   geom_text(aes(label = percent(signif(n / nn, 2))), position = position_fill(reverse = TRUE,vjust = .5)) +
   coord_flip() +
   scale_y_continuous(labels = scales::percent)+
   facet_grid(~ tratamiento,scales = "free",space = "free")+
+  scale_x_discrete(position="top")+
+  theme(legend.position="left")+
   labs(x="Pregunta",y="Porcentaje")
   
 # Caracterización 2 evaluación
 gruporespuestas_2 <-  base_alf %>%
   left_join(select(preguntas,-caracterizacion), by = "pregunta") %>%
-  group_by(tratamiento, caracterizacion, pregunta, interpretacion) %>%
+  group_by(tratamiento, caracterizacion, pregunta_corta, interpretacion) %>%
   summarise(n = n()) %>%
   filter(caracterizacion == "Caracterización 2")
 gruporespuestas_2
 
 gruporespuestas_2tally <-
   gruporespuestas_2 %>% 
-  group_by(tratamiento, caracterizacion, pregunta) %>% 
+  group_by(tratamiento, caracterizacion, pregunta_corta) %>% 
   add_tally()
 gruporespuestas_2tally$interpretacion <-
   ordered(gruporespuestas_2tally$interpretacion,
           c("Figurativa", "Literal", "Distractor"))
-gruporespuestas_2tally$pregunta <- droplevels(gruporespuestas_2tally$pregunta)
+gruporespuestas_2tally$pregunta <- droplevels(gruporespuestas_2tally$pregunta_corta)
 
 ggplot(gruporespuestas_2tally,
        aes(x = forcats::fct_rev(pregunta), y = n, fill = interpretacion)) +
@@ -719,6 +748,8 @@ ggplot(gruporespuestas_2tally,
   coord_flip() +
   scale_y_continuous(labels = scales::percent)+
   facet_grid(~ tratamiento,scales = "free",space = "free")+
+  scale_x_discrete(position="top")+
+  theme(legend.position="left", text=element_text(family="Times"))+
   labs(x="Pregunta",y="Porcentaje")
 
 # Análisis por Edad  ------------------------------------------------------
@@ -744,7 +775,7 @@ ggplot(grupoedadinterpretaciontally,
   scale_y_continuous(labels = scales::percent)+
   #coord_flip() +
   facet_grid(caracterizacion ~ tratamiento) +
-  labs(x = "Edad", y = "Porcentaje")
+  labs(x = "Edad (Años)", y = "Porcentaje")
 
 
 #Clasificando entre figurado y no figurado
@@ -764,7 +795,7 @@ ggplot(grupoedadinterpretaciontally2,
   #coord_flip() +
   scale_y_continuous(labels = scales::percent)+
   facet_grid(caracterizacion~ tratamiento,scales = "free",space = "free")+
-  labs(x="Edad",y="Porcentaje")
+  labs(x="Edad (Años)",y="Porcentaje")
 
 
 ggplot(grupoedadinterpretaciontally2,
@@ -776,7 +807,7 @@ ggplot(grupoedadinterpretaciontally2,
   scale_y_continuous(labels = scales::percent)+
   #coord_flip() +
   facet_grid(caracterizacion ~ tratamiento) +
-  labs(x = "Edad", y = "Porcentaje")
+  labs(x = "Edad (Años)", y = "Porcentaje")
 
 # Edad y respuestas por pregunta
 
@@ -1074,7 +1105,7 @@ ggplot(grupofiguratally, aes(x = figura, y = n, fill = interpretacion)) +
   geom_text(aes(label = percent(signif(n / nn, 2))), position = position_fill(vjust = .5)) +
   scale_y_continuous(labels = scales::percent)+
   #coord_flip() +
-  labs(x = "Figura Literaria", y = "Porcentaje")+
+  labs(x = "Tipo de lenguaje figurado", y = "Porcentaje")+
   facet_grid(~ tratamiento,scales = "free",space = "free")
   
 # figura y respuestas por pregunta
