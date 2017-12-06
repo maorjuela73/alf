@@ -4,6 +4,7 @@ library("tidyverse", lib.loc = "~/R/win-library/3.4")
 library("readxl", lib.loc = "~/R/win-library/3.4")
 library("lubridate", lib.loc = "~/R/win-library/3.4")
 library("scales", lib.loc = "~/R/win-library/3.4")
+# Les voy a mostrar el poder de git
 
 # Carga de datos ----------------------------------------------------------
 
