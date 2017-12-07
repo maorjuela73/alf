@@ -517,18 +517,18 @@ preguntas$pregunta_corta <-
   ordered(
     preguntas$pregunta_corta,
     levels = c(
-      "Mandragora disfrutaba de una vida sin dolores de cabeza",
-      "Mandragora ordeno su habitacion en un abrir y cerrar de ojos",
+      "Mandrágora disfrutaba de una vida sin dolores de cabeza",
+      "Mandrágora ordenó su habitación en un abrir y cerrar de ojos",
       "Circe pierde la cabeza por un buen postre",
-      "Mandragora se quedo con la boca abierta",
+      "Mandrágora se quedó con la boca abierta",
       "Abriendo los ojos como platos",
-      "Le habian tomado el pelo",
-      "Se habia dado con la puerta en las narices",
-      "Gritando a todo pulmon",
-      "Las aguas del rio rugian como leones",
-      "La bruja con el corazon en la boca",
-      "Mandragora con los nervios a flor de piel",
-      "Y asi como por arte de magia",
+      "Le habían tomado el pelo",
+      "Se había dado con la puerta en las narices",
+      "Gritando a todo pulmón",
+      "Las aguas del rio rugían como leones",
+      "La bruja con el corazón en la boca",
+      "Mandrágora con los nervios a flor de piel",
+      "Y así como por arte de magia",
       "No seas payaso",
       "Pareces un loro",
       "Quiero un abrazo de oso",
@@ -573,6 +573,15 @@ base_alf <- base_alf %>%
     )
   )
 
+base_alf <- base_alf %>% 
+  mutate(
+    sexo = case_when(
+      sexo == "F" ~ "Femenino",
+      sexo == "M" ~ "Masculino"
+    )
+  ) 
+
+
 base_alf$tratamiento <-
   ordered(base_alf$tratamiento, levels = c("Inicial", "Final"))
 base_alf$pregunta <-
@@ -602,6 +611,7 @@ base_alf$pregunta <-
       "Si yo digo que \"mi vecina tiene la lengua larga\" quiero decir que:"
     )
   )
+
 
 
 # Análisis de información personal----------------------------------------------------------------
@@ -750,7 +760,7 @@ ggplot(gruporespuestas_2tally,
   scale_y_continuous(labels = scales::percent)+
   facet_grid(~ tratamiento,scales = "free",space = "free")+
   scale_x_discrete(position="top")+
-  theme(legend.position="left", text=element_text(family="Times"))+
+  theme(legend.position="left", text=element_text(family="Times New Roman"))+
   labs(x="Pregunta",y="Porcentaje")
 
 # Análisis por Edad  ------------------------------------------------------
@@ -816,7 +826,7 @@ ggplot(grupoedadinterpretaciontally2,
 grupoedadrespuestas_1 <-  base_alf %>%
   filter(caracterizacion == "Caracterización 1") %>%
   left_join(select(preguntas,-caracterizacion), by = "pregunta") %>%
-  group_by(tratamiento, edad, pregunta, interpretacion) %>%
+  group_by(tratamiento, edad, pregunta_corta, interpretacion) %>%
   summarise(n = n())
 grupoedadrespuestas_1
 
@@ -827,21 +837,31 @@ grupoedadrespuestas_1
 #   facet_grid(edad~tratamiento)
 
 grupoedadrespuestas_1tally <-
-  grupoedadrespuestas_1 %>% group_by(tratamiento, edad, pregunta) %>% add_tally()
+  grupoedadrespuestas_1 %>% group_by(tratamiento, edad, pregunta_corta) %>% add_tally()
+grupoedadrespuestas_1tally$interpretacion <-
+  ordered(grupoedadrespuestas_1tally$interpretacion,
+          c("Figurativa", "Literal", "Distractor"))
 
+labels <- c('4' = "4 años", '5' = "5 años", '6' = "6 años")
 ggplot(grupoedadrespuestas_1tally,
-       aes(x = pregunta, y = n, fill = interpretacion)) +
+       aes(x = forcats::fct_rev(pregunta_corta), y = n, fill = interpretacion)) +
   geom_bar(stat = "identity", position = "fill") +
   geom_text(aes(label = percent(signif(n / nn, 2))), position = position_fill(vjust = .5)) +
   coord_flip() +
-  facet_grid(edad ~ tratamiento, labeller = label_both)
+  scale_fill_hue("Interpretación",h.start = 236)+
+  scale_x_discrete(position="top")+
+  labs(x="Pregunta",y="Porcentaje")+
+  scale_y_continuous(labels = scales::percent)+
+  theme(legend.position="left")+
+  facet_grid(edad ~ tratamiento,labeller=labeller(edad = labels),switch = "y")
 
 # Caracterización 2 evaluación
 grupoedadrespuestas_2 <-  base_alf %>%
   filter(caracterizacion == "Caracterización 2") %>%
   left_join(select(preguntas,-caracterizacion), by = "pregunta") %>%
-  group_by(tratamiento, edad, pregunta, interpretacion) %>%
+  group_by(tratamiento, edad, pregunta_corta, interpretacion) %>%
   summarise(n = n())
+grupoedadrespuestas_2
 
 # ggplot(grupoedadrespuestas_2, aes(x = pregunta, y = n, fill = interpretacion )) +
 #   geom_bar(stat = "identity",position = "fill") +
@@ -850,14 +870,23 @@ grupoedadrespuestas_2 <-  base_alf %>%
 #   facet_grid(edad~tratamiento)
 
 grupoedadrespuestas_2tally <-
-  grupoedadrespuestas_2 %>% group_by(tratamiento, edad, pregunta) %>% add_tally()
+  grupoedadrespuestas_2 %>% group_by(tratamiento, edad, pregunta_corta) %>% add_tally()
+grupoedadrespuestas_2tally$interpretacion <-
+  ordered(grupoedadrespuestas_2tally$interpretacion,
+          c("Figurativa", "Literal", "Distractor"))
 
+labels <- c('4' = "4 años", '5' = "5 años", '6' = "6 años")
 ggplot(grupoedadrespuestas_2tally,
-       aes(x = pregunta, y = n, fill = interpretacion)) +
+       aes(x = forcats::fct_rev(pregunta_corta), y = n, fill = interpretacion)) +
   geom_bar(stat = "identity", position = "fill") +
   geom_text(aes(label = percent(signif(n / nn, 2))), position = position_fill(vjust = .5)) +
   coord_flip() +
-  facet_grid(edad ~ tratamiento, labeller = label_both)
+  scale_fill_manual("Interpretación",values=c("#479FFF","#FB7377","#00B826"))+
+  scale_x_discrete(position="top")+
+  labs(x="Pregunta",y="Porcentaje")+
+  scale_y_continuous(labels = scales::percent)+
+  theme(legend.position="left")+
+  facet_grid(edad ~ tratamiento,labeller=labeller(edad = labels),switch = "y")
 
 ggplot(grupoedadrespuestas_2tally,
        aes(x = edad, y = n, fill = interpretacion)) +
@@ -934,7 +963,7 @@ ggplot(grupogradointerpretaciontally2,
 grupogradorespuestas_1 <-  base_alf %>%
   filter(caracterizacion == "Caracterización 1") %>%
   left_join(select(preguntas,-caracterizacion), by = "pregunta") %>%
-  group_by(tratamiento, grado, pregunta, interpretacion) %>%
+  group_by(tratamiento, grado, pregunta_corta, interpretacion) %>%
   summarise(n = n())
 grupogradorespuestas_1
 
@@ -945,21 +974,36 @@ grupogradorespuestas_1
 #   facet_grid(grado~tratamiento)
 
 grupogradorespuestas_1tally <-
-  grupogradorespuestas_1 %>% group_by(tratamiento, grado, pregunta) %>% add_tally()
+  grupogradorespuestas_1 %>% group_by(tratamiento, grado, pregunta_corta) %>% add_tally()
+grupogradorespuestas_1tally$interpretacion <-
+  ordered(grupogradorespuestas_1tally$interpretacion,
+          c("Figurativa", "Literal", "Distractor"))
 
 ggplot(grupogradorespuestas_1tally,
-       aes(x = pregunta, y = n, fill = interpretacion)) +
+       aes(x = forcats::fct_rev(pregunta_corta), y = n, fill = interpretacion)) +
   geom_bar(stat = "identity", position = "fill") +
   geom_text(aes(label = percent(signif(n / nn, 2))), position = position_fill(vjust = .5)) +
   coord_flip() +
-  facet_grid(grado ~ tratamiento, labeller = label_both)
+  scale_fill_manual("Interpretación",values=c("#479FFF","#FB7377","#00B826"))+
+  scale_x_discrete(position="top")+
+  labs(x="Pregunta",y="Porcentaje")+
+  scale_y_continuous(labels = scales::percent)+
+  theme(legend.position="left")+
+  facet_grid(grado ~ tratamiento,switch = "y")
+
+  #       aes(x = pregunta, y = n, fill = interpretacion)) +
+  # geom_bar(stat = "identity", position = "fill") +
+  # geom_text(aes(label = percent(signif(n / nn, 2))), position = position_fill(vjust = .5)) +
+  # coord_flip() +
+  # facet_grid(grado ~ tratamiento, labeller = label_both)
 
 # Caracterización 2 evaluación
 grupogradorespuestas_2 <-  base_alf %>%
   filter(caracterizacion == "Caracterización 2") %>%
   left_join(select(preguntas,-caracterizacion), by = "pregunta") %>%
-  group_by(tratamiento, grado, pregunta, interpretacion) %>%
+  group_by(tratamiento, grado, pregunta_corta, interpretacion) %>%
   summarise(n = n())
+grupogradorespuestas_2
 
 # ggplot(grupogradorespuestas_2, aes(x = pregunta, y = n, fill = interpretacion )) +
 #   geom_bar(stat = "identity",position = "fill") +
@@ -968,14 +1012,22 @@ grupogradorespuestas_2 <-  base_alf %>%
 #   facet_grid(grado~tratamiento)
 
 grupogradorespuestas_2tally <-
-  grupogradorespuestas_2 %>% group_by(tratamiento, grado, pregunta) %>% add_tally()
+  grupogradorespuestas_2 %>% group_by(tratamiento, grado, pregunta_corta) %>% add_tally()
+grupogradorespuestas_2tally$interpretacion <-
+  ordered(grupogradorespuestas_2$interpretacion,
+          c("Figurativa", "Literal", "Distractor"))
 
 ggplot(grupogradorespuestas_2tally,
-       aes(x = pregunta, y = n, fill = interpretacion)) +
+       aes(x = forcats::fct_rev(pregunta_corta), y = n, fill = interpretacion)) +
   geom_bar(stat = "identity", position = "fill") +
   geom_text(aes(label = percent(signif(n / nn, 2))), position = position_fill(vjust = .5)) +
   coord_flip() +
-  facet_grid(grado ~ tratamiento, labeller = label_both)
+  scale_fill_manual("Interpretación",values=c("#479FFF","#FB7377","#00B826"))+
+  scale_x_discrete(position="top")+
+  labs(x="Pregunta",y="Porcentaje")+
+  scale_y_continuous(labels = scales::percent)+
+  theme(legend.position="left")+
+  facet_grid(grado ~ tratamiento,switch = "y")
 
 # Análisis por Sexo -----------------------------------------------------
 
@@ -1032,8 +1084,9 @@ ggplot(gruposexointerpretaciontally2,
 gruposexorespuestas_1 <-  base_alf %>%
   filter(caracterizacion == "Caracterización 1") %>%
   left_join(select(preguntas,-caracterizacion), by = "pregunta") %>%
-  group_by(tratamiento, sexo, pregunta, interpretacion) %>%
+  group_by(tratamiento, sexo, pregunta_corta, interpretacion) %>%
   summarise(n = n())
+gruposexorespuestas_1 
 
 # ggplot(gruposexorespuestas_1, aes(x = pregunta, y = n, fill = interpretacion )) +
 #   geom_bar(stat = "identity",position = "fill") +
@@ -1042,21 +1095,33 @@ gruposexorespuestas_1 <-  base_alf %>%
 #   facet_grid(sexo~tratamiento)
 
 gruposexorespuestas_1tally <-
-  gruposexorespuestas_1 %>% group_by(tratamiento, sexo, pregunta) %>% add_tally()
+  gruposexorespuestas_1 %>% group_by(tratamiento, sexo, pregunta_corta) %>% add_tally()
+
+gruposexorespuestas_1tally$interpretacion <-
+  ordered(gruposexorespuestas_1tally$interpretacion,
+          c("Figurativa", "Literal", "Distractor"))
 
 ggplot(gruposexorespuestas_1tally,
-       aes(x = pregunta, y = n, fill = interpretacion)) +
+       aes(x = forcats::fct_rev(pregunta_corta), y = n, fill = interpretacion)) +
   geom_bar(stat = "identity", position = "fill") +
   geom_text(aes(label = percent(signif(n / nn, 2))), position = position_fill(vjust = .5)) +
   coord_flip() +
-  facet_grid(sexo ~ tratamiento, labeller = label_both)
+  scale_fill_manual("Interpretación",values=c("#479FFF","#FB7377","#00B826"))+
+  scale_x_discrete(position="top")+
+  labs(x="Pregunta",y="Porcentaje")+
+  scale_y_continuous(labels = scales::percent)+
+  theme(legend.position="left")+
+  facet_grid(sexo ~ tratamiento,switch = "y")
+
+          
 
 # Caracterización 2 evaluación
 gruposexorespuestas_2 <-  base_alf %>%
   filter(caracterizacion == "Caracterización 2") %>%
   left_join(select(preguntas,-caracterizacion), by = "pregunta") %>%
-  group_by(tratamiento, sexo, pregunta, interpretacion) %>%
+  group_by(tratamiento, sexo, pregunta_corta, interpretacion) %>%
   summarise(n = n())
+gruposexorespuestas_2
 
 # ggplot(gruposexorespuestas_2, aes(x = pregunta, y = n, fill = interpretacion )) +
 #   geom_bar(stat = "identity",position = "fill") +
@@ -1065,14 +1130,23 @@ gruposexorespuestas_2 <-  base_alf %>%
 #   facet_grid(sexo~tratamiento)
 
 gruposexorespuestas_2tally <-
-  gruposexorespuestas_2 %>% group_by(tratamiento, sexo, pregunta) %>% add_tally()
+  gruposexorespuestas_2 %>% group_by(tratamiento, sexo, pregunta_corta) %>% add_tally()
+gruposexorespuestas_2tally$interpretacion <-
+  ordered(gruposexorespuestas_2tally$interpretacion,
+          c("Figurativa", "Literal", "Distractor"))
 
 ggplot(gruposexorespuestas_2tally,
-       aes(x = pregunta, y = n, fill = interpretacion)) +
+       aes(x = forcats::fct_rev(pregunta_corta), y = n, fill = interpretacion)) +
   geom_bar(stat = "identity", position = "fill") +
   geom_text(aes(label = percent(signif(n / nn, 2))), position = position_fill(vjust = .5)) +
   coord_flip() +
-  facet_grid(sexo ~ tratamiento, labeller = label_both)
+  scale_fill_manual("Interpretación",values=c("#479FFF","#FB7377","#00B826"))+
+  scale_x_discrete(position="top")+
+  labs(x="Pregunta",y="Porcentaje")+
+  scale_y_continuous(labels = scales::percent)+
+  theme(legend.position="left")+
+  facet_grid(sexo ~ tratamiento,switch = "y")
+
 
 # Análisis por figura ---------------------------------------------------
 
@@ -1115,7 +1189,7 @@ ggplot(grupofiguratally, aes(x = figura, y = n, fill = interpretacion)) +
 grupofigurarespuestas_2 <-  base_alf %>%
   left_join(select(preguntas,-caracterizacion), by = "pregunta") %>%
   filter(caracterizacion == "Caracterización 2") %>%
-  group_by(tratamiento, figura, pregunta, interpretacion) %>%
+  group_by(tratamiento, figura, pregunta_corta, interpretacion) %>%
   summarise(n = n())
 
 # ggplot(grupofigurarespuestas_2, aes(x = pregunta, y = n, fill = interpretacion )) +
@@ -1125,136 +1199,21 @@ grupofigurarespuestas_2 <-  base_alf %>%
 #   facet_grid(figura~tratamiento, scales = "free", space = "free")
 
 grupofigurarespuestas_2tally <-
-  grupofigurarespuestas_2 %>% group_by(tratamiento, figura, pregunta) %>% add_tally()
+  grupofigurarespuestas_2 %>% group_by(tratamiento, figura, pregunta_corta) %>% add_tally()
 
 ggplot(grupofigurarespuestas_2tally,
-       aes(x = pregunta, y = n, fill = interpretacion)) +
+       aes(x = pregunta_corta, y = n, fill = interpretacion)) +
   scale_fill_manual("Interpretación",values=c("#479FFF","#FB7377","#00B826"))+
   geom_bar(stat = "identity", position = position_fill(reverse = TRUE)) +
   geom_text(aes(label = percent(signif(n / nn, 2))), position = position_fill(reverse = TRUE,vjust = .5)) +
   scale_y_continuous(labels = scales::percent)+
   coord_flip() +
+  scale_x_discrete(position="top")+
   labs(x = "Pregunta", y = "Porcentaje")+
+  theme(legend.position="left")+
   facet_grid(
     figura ~ tratamiento,
     scales = "free",
-    space = "free"
+    space = "free",
+    switch = "y"
   )
-
-ggplot(grupofigurarespuestas_2tally,
-       aes(x = pregunta, y = n, fill = interpretacion)) +
-  scale_fill_brewer()+
-  geom_bar(stat = "identity", position = position_fill(reverse = TRUE)) +
-  geom_text(aes(label = percent(signif(n / nn, 2))), position = position_fill(reverse = TRUE,vjust = .5)) +
-  scale_y_continuous(labels = scales::percent)+
-  coord_flip() +
-  labs(x = "Pregunta", y = "Porcentaje")+
-  facet_grid(
-    figura ~ tratamiento,
-    scales = "free",
-    space = "free"
-  )+
-  theme_light()
-# PRIMER INTENTO Relacion entre genero y respuestas --------------------------------------
-
-# TODO Separarlo a nivel general
-names(Final_eval1) <-
-  c(
-    "nombre",
-    "sexo",
-    "fecha_nacimiento",
-    "grado",
-    "pregunta",
-    "respuesta",
-    "interpretacion"
-  )
-
-p <- ggplot(Inicial_eval1, aes(x = pregunta, fill = interpretacion))
-p + geom_bar(position = "dodge") + coord_flip() + ylab("Pregunta") + xlab("Frecuencia") #+ facet_grid(~sexo)
-p + geom_bar(position = "dodge") + coord_flip() + ylab("Pregunta") + xlab("Frecuencia") + facet_grid(~
-                                                                                                       sexo)
-
-# TODO hacerla en general, poner frecuencias relativas
-p <- ggplot(Inicial_eval1, aes(x = pregunta, fill = sexo))
-p + geom_bar(position = "dodge") + coord_flip() + ylab("Pregunta") + xlab("Frecuencia") + facet_grid(~
-                                                                                                       interpretacion)
-
-
-# Final -----------------------------------------------------------------
-
-
-p <- ggplot(Final_eval1, aes(x = pregunta, fill = interpretacion))
-p + geom_bar(position = "dodge") + coord_flip() + ylab("Pregunta") + xlab("Frecuencia") + facet_grid(~
-                                                                                                       sexo)
-
-p <- ggplot(Final_eval1, aes(x = pregunta, fill = sexo))
-p + geom_bar(position = "dodge") + coord_flip() + ylab("Pregunta") + xlab("Frecuencia") + facet_grid(~
-                                                                                                       interpretacion)
-
-
-# Comparacion post y pre --------------------------------------------------
-
-base1 <-
-  rbind(
-    data.frame(
-      resptesta = c(Inicial_eval1$interpretacion),
-      tipo = "Inicial",
-      genero = Inicial_eval1$sexo
-    ),
-    data.frame(
-      resptesta = c(Final_eval1$interpretacion),
-      tipo = "Final",
-      genero = Final_eval1$sexo
-    )
-  )
-
-p <- ggplot(base1, aes(x = resptesta, fill = tipo))
-p + geom_bar(position = "dodge") + coord_flip() + ylab("Pregunta") + xlab("Frecuencia") + facet_grid(~
-                                                                                                       genero)
-
-
-p <- ggplot(Final_eval1, aes(x = pregunta, fill = interpretacion))
-p + geom_bar() + coord_flip() + ylab("Pregunta") + xlab("Frecuencia")
-
-ggplot(Inicial_eval1, aes(x = Inicial_eval1$fecha_nacimiento)) + geom_bar()
-
-table(Inicial_eval1$interpretacion , Inicial_eval1$pregunta)
-table(Final_eval1$interpretacion , Final_eval1$pregunta)
-
-chisq.test(base1$resptesta, base1$tipo)
-
-
-ggplot(base1, aes(resptesta, fill = tipo)) + geom_bar(position = "dodge")
-
-p <- ggplot(Final_eval1, aes(x = pregunta, fill = interpretacion))
-p + geom_bar(position = "dodge") + coord_flip() + ylab("Pregunta") + xlab("Frecuencia") + facet_grid(~
-                                                                                                       sexo)
-
-
-# TODO respecto a genero, sacar boxplots sobre grados y edades TODO es hacer
-
-# En evaluación 2 se desar mirar si hay diferencias por el tipo de pregunta (simil, metáfora, metonimia)
-
-base_alf1 <- filter(base_alf, tratamiento == "Inicial")
-salida <-
-  list(prop.table(table(
-    base_alf1$interpretacion, base_alf1$sexo
-  )),
-  prop.table(table(
-    base_alf1$interpretacion, base_alf1$sexo
-  ), 1),
-  prop.table(table(
-    base_alf1$interpretacion, base_alf1$sexo
-  ), 2),
-  (table(
-    base_alf1$interpretacion, base_alf1$sexo
-  )))
-salida <- do.call(rbind, salida)
-write.table(salida, "salida.txt")
-
-salida1 <-
-  table(base_alf1$interpretacion, base_alf1$sexo) %>% prop.table(., 1) %>% data.table() %>% setnames(., names(.), c("Interpretacion", "Sexo", "Porcentaje"))
-ggplot(salida1, aes(Interpretacion, Porcentaje, fill = Sexo)) + geom_bar(stat = "identity", position = "fill") +
-  geom_text(aes(label = paste0(round(Porcentaje * 100), "%")), position = position_fill(vjust = .5))
-
-chisq.test(table(base_alf1$interpretacion, base_alf1$sexo))
